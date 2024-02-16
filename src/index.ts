@@ -23,4 +23,9 @@ document.addEventListener('keydown', event => {
     else if (event.key == 'j') cursorRow = Math.min(ROWS - 1, cursorRow + 1);
     else if (event.key == 'f') board.placeFlag(cursorRow, cursorCol);
     else if (event.key == ' ') board.open(cursorRow, cursorCol);
+    else if (event.key == 'r') {
+        board.resetBoard();
+        cursorRow = 0;
+        cursorCol = 0;
+    }
 });

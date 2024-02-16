@@ -15,8 +15,21 @@ export class Board {
         this.rows = rows;
         this.cols = cols;
         this.grid = Array(rows).fill([]).map(() => Array(cols));
-        for (let i = 0; i < rows; i++) for (let j = 0; j < cols; j++) this.grid[i][j] = {containsMine: false, minesSurrounding: 0, state: 'hidden'};
         this.numberOfMines = Math.floor(rows * cols * density);
+        this.resetBoard();
+    }
+
+    resetBoard() {
+        for (let i = 0; i < this.rows; i++) 
+            for (let j = 0; j < this.cols; j++) 
+                this.grid[i][j] = {containsMine: false, minesSurrounding: 0, state: 'hidden'};
+        this.gameStarted = false;
+    }
+
+    revealWholeBoard() {
+        for (let i = 0; i < this.rows; i++) 
+            for (let j = 0; j < this.cols; j++) 
+                this.grid[i][j].state = 'open';
     }
 
     getNeighbours(row: number, col: number): {row: number, col: number}[] {
@@ -40,9 +53,12 @@ export class Board {
             this.fillRandomly({row, col});
         }
         if (this.grid[row][col].state != 'hidden') return;
-        this.grid[row][col].state = 'open';
-        if (this.grid[row][col].minesSurrounding == 0) {
-            this.getNeighbours(row, col).forEach(p => this.open(p.row, p.col));
+        if (this.grid[row][col].containsMine) this.revealWholeBoard();
+        else {
+            this.grid[row][col].state = 'open';
+            if (this.grid[row][col].minesSurrounding == 0) {
+                this.getNeighbours(row, col).forEach(p => this.open(p.row, p.col));
+            }
         }
     }
 
